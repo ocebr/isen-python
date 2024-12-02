@@ -34,17 +34,17 @@ def markFavourtie(request, id):
     Returns:
         json response of success or failure 
     '''
-    if request.method == 'AJAX':
-        product = Product.objects.get(id=id)
-        if not Product:
-            JsonResponse({'success': False})
-        favourite_obj, created = FavouriteProduct.objects.get_or_create(product=product, user=request.user)
-        if not created:
-            favourite_obj = FavouriteProduct.objects.get(id = favourite_obj.id)
-            if favourite_obj.is_favourite:
-                favourite_obj.is_favourite = False
-            else:
-                favourite_obj.is_favourite = True
-            favourite_obj.save(update_fields=['is_favourite'])
-        return JsonResponse({'success': True, 'marked': favourite_obj.is_favourite})
-    JsonResponse({'success': False})
+    # if request.method == 'AJAX':
+    product = Product.objects.get(id=id)
+    if not Product:
+        JsonResponse({'success': False})
+    favourite_obj, created = FavouriteProduct.objects.get_or_create(product=product, user=request.user)
+    if not created:
+        favourite_obj = FavouriteProduct.objects.get(id = favourite_obj.id)
+        if favourite_obj.is_favourite:
+            favourite_obj.is_favourite = False
+        else:
+            favourite_obj.is_favourite = True
+        favourite_obj.save(update_fields=['is_favourite'])
+    return JsonResponse({'success': True, 'marked': favourite_obj.is_favourite})
+    # JsonResponse({'success': False})

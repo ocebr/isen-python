@@ -81,7 +81,7 @@ Clark, MO 65243</p>
             function markFavourite(id, reload) {
               $.ajax({
                 url: "/favourite/mark/" + id + "/",
-                type: "AJAX",
+                method: "POST",
                 success: function (response) {
                   if (response["success"] == true) {
                     if (reload == true){
