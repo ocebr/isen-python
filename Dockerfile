@@ -15,7 +15,7 @@ COPY requirements.txt /requirements.txt
 RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 
 
-FROM gcr.io/distroless/python3-debian12:latest-amd64
+FROM gcr.io/distroless/python3-debian12:debug
 COPY --from=build-venv /venv /venv
 
 WORKDIR /app
@@ -25,4 +25,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+ENTRYPOINT ["/venv/bin/python3","manage.py", "runserver", "0.0.0.0:8080"]
