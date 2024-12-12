@@ -119,7 +119,7 @@ build:
     - when: always
 
 generating_sbom:
-  stage: scan
+  stage: build
   image: debian:stable-slim
   before_script:
     - apt-get update && apt-get install -y curl
