@@ -44,7 +44,9 @@ describe('Create and connect to an account', () => {
       cy.get('[id=favBtn1]').click()
       cy.contains('FAVOURITE').click()
       cy.contains('Coca cola')
-  
+      cy.get('[id=favBtn1]').click()
+      cy.contains('No Product in your favourite list. Please add')
+
   
     })
   })
