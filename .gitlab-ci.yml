@@ -15,6 +15,9 @@ stages:
   - test-e2e
   - scan
 
+variables:
+  IMAGE_SOURCE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+  
 pylint:
   stage: lint
   image: python:3.9-slim
@@ -115,11 +118,11 @@ build:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_TLS_CERTDIR: ""
-    IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker build -t $IMAGE_TAG -f Dockerfile .
-    - docker push $IMAGE_TAG
+    - docker push $IMAGE_SOURCE
   rules:
     - when: always
 
