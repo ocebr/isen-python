@@ -121,7 +121,7 @@ build:
 
   script:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
-    - docker build -t $IMAGE_TAG -f Dockerfile .
+    - docker build -t $IMAGE_SOURCE -f Dockerfile .
     - docker push $IMAGE_SOURCE
   rules:
     - when: always
