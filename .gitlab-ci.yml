@@ -101,7 +101,7 @@ pytest_integration:
       codequality: pytest-warnings-integration.json
   rules:
     - when: always
-    
+
 semgrep-sast:
   rules:
     - when: always
@@ -148,3 +148,16 @@ grype:
   rules:
     - when: always
 
+
+cypress tests:
+  image: cypress/browsers:node-22.11.0-chrome-130.0.6723.69-1-ff-132.0-edge-130.0.2849.56-1
+  stage: test-e2e
+  services:
+    - name: $IMAGE_SOURCE
+      alias: oc-commerce
+  script:
+    # run Cypress tests
+    - npm install cypress --save-dev
+    - npx cypress run --browser firefox --config baseUrl=http://oc-commerce:8000
+  rules:  
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
