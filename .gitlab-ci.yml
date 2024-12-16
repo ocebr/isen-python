@@ -161,6 +161,6 @@ cypress tests:
   script:
     # run Cypress tests
     - npm install cypress --save-dev
-    - npx cypress run --browser firefox --config baseUrl=http://oc-commerce:8000
+    - npx cypress run --browser firefox --config baseUrl=http://oc-commerce:8080
   rules:  
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
