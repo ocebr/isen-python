@@ -212,6 +212,11 @@ deploy-cloud-run:
       variables:
         SERVICE: staging-e-commerce
     - when: never
+  after_script:
+    - echo "SERVICE=$SERVICE" >> service.env
+  artifacts:
+    reports:
+      dotenv: service.env
 
 
 # This job will create Gitlab Environment related to main branch which is our  environment
