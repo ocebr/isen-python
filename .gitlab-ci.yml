@@ -202,18 +202,12 @@ deploy-cloud-run:
   rules:
     - if: $CI_COMMIT_TAG
       variables:
-        ENVIRONMENT: production
         SERVICE: e-commerce
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
       variables:
-        ENVIRONMENT: staging
         SERVICE: staging-e-commerce
     - when: never
-  after_script:
-    - echo "ENVIRONMENT=$ENVIRONMENT" > environment.env
-  artifacts:
-    reports:
-      dotenv: environment.env
+
 
 # This job will create Gitlab Environment related to main branch which is our  environment
 environment:
@@ -239,7 +233,13 @@ environment:
     url: $SERVICE_URL
     # Only deploying to production when running on default branch which is main
   rules:  
-    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH || $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TAG
+      variables:
+        ENVIRONMENT: production
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      variables:
+        ENVIRONMENT: staging
+    - when: never
 
 owasp zap full scan:
   stage: dast-scan
