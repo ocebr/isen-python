@@ -276,7 +276,8 @@ owasp zap full scan:
     paths: 
       - $ZAP_REPORTS_DIR/
     when: always
-  allow_failure: true
+  allow_failure: 
+    exit_codes: 2
   rules:  
     - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
 
