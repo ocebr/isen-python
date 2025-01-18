@@ -148,6 +148,7 @@ build:
     - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
     - docker build -t $IMAGE_SOURCE -f Dockerfile .
     - docker push $IMAGE_SOURCE
+    - echo "IMAGE_SOURCE=$IMAGE_SOURCE" >> docker.env
   rules:
     - if: $CI_COMMIT_TAG
       variables:
@@ -157,6 +158,9 @@ build:
       variables:
         IMAGE_TAG: $CI_COMMIT_SHORT_SHA
         IMAGE_SOURCE: $CI_REGISTRY_IMAGE:$IMAGE_TAG
+  artifacts:
+    reports:
+      dotenv: docker.env
 
 
 generating_sbom:
