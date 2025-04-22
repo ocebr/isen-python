@@ -15,10 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Actualización a la versión más reciente de Hadolint
       - name: Set up Dockerfile linter (Hadolint)
-        uses: hadolint/hadolint-action@v2  # Actualización a la versión más reciente
+        uses: hadolint/hadolint-action@v2.5.0  # Usamos una versión estable más reciente
         with:
-          dockerfile: ./Dockerfile  # Asegúrate de que el Dockerfile esté en el directorio correcto
+          dockerfile: ./Dockerfile
 
       - name: Set up Python
         uses: actions/setup-python@v2
