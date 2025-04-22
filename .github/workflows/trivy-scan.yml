@@ -1,0 +1,24 @@
+name: Container Vulnerability Scan
+
+on:
+  push:
+    branches: ["main", "develop", "feature/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  trivy:
+    name: Scan Docker image with Trivy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Install Trivy
+        run: |
+          sudo apt-get update && sudo apt-get install -y wget
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.1_Linux-64bit.deb
+          sudo dpkg -i trivy_0.50.1_Linux-64bit.deb
+
+      - name: Scan image for vulnerabilities
+        run: |
+          trivy image --severity HIGH,CRITICAL aeilxs/isen-python:dev-${{ github.sha }}
