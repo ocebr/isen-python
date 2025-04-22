@@ -23,6 +23,5 @@ jobs:
 
       - name: Check pytest installation
         run: |
-          which pytest
-          pytest --version
+          pytest
 
