@@ -16,7 +16,7 @@ jobs:
       - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0.15.10
         with:
-          source: dir:.
+          path: .
           format: syft-json
           output-file: isen-python-generate-sbom.syft-json
 
