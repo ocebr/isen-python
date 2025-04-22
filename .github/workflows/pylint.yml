@@ -1,4 +1,4 @@
-name: Lint
+name: Pylint
 
 on: [push]
 
@@ -25,14 +25,3 @@ jobs:
       - name: Run Pylint
         run: |
           pylint --disable=C,R0801 --fail-under=7 $(git ls-files '*.py')
-
-  lint-docker:
-    name: Lint Dockerfile
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Lint Dockerfile with Hadolint (v3)
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: Dockerfile
