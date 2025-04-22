@@ -1,4 +1,3 @@
-name: Pylint
 
 on: [push]
 
@@ -20,4 +19,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint --disable=C,R0801 --fail-under=7 $(git ls-files '*.py')
+        pylint $(git ls-files '*.py') --disable=C,R0801 --fail-under=7
