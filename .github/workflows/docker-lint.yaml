@@ -1,0 +1,22 @@
+name: Dockerfile Linter
+
+on: [push]
+
+jobs:
+  hadolint:
+    name: Analyse du Dockerfile avec Hadolint
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Cloner le dépôt
+      uses: actions/checkout@v4
+
+    - name: Installer Hadolint
+      run: |
+        sudo wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+        sudo chmod +x /bin/hadolint
+
+    - name: Lint Dockerfile
+      run: |
+        hadolint Dockerfile
+
