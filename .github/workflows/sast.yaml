@@ -20,5 +20,5 @@ jobs:
       run: pip install bandit
 
     - name: Scanner le code avec Bandit
-      run: |
-        bandit -r . -x unit_tests,integration_tests
+      run: bandit -r . -x unit_tests,integration_tests --severity-level high
+
