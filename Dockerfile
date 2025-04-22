@@ -1,7 +1,7 @@
 
 FROM python:3.9-slim-buster
 
-USER user1
+#USER user1
 
 WORKDIR /app
 
