@@ -21,4 +21,4 @@ jobs:
           pip install bandit
       - name: Run Bandit security scan
         run: |
-          bandit -r . -x tests,unit_test,integration_tests -c bandit.yaml
+          bandit -r . -x tests,unit_test,integration_tests -c .github/workflows/bandit.yaml
