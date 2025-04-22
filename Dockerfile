@@ -2,7 +2,7 @@
 
 FROM python:3.9-slim-buster
 
-USER root
+USER user1
 
 WORKDIR /app
 
