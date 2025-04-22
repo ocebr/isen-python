@@ -34,7 +34,7 @@ jobs:
       - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sbom
+          name: isen-python-tl-docker-syft-json 
           path: sbom.syft.json
 
   security-scan:
