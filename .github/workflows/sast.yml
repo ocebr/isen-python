@@ -25,4 +25,5 @@ jobs:
 
       - name: Run Bandit excluding tests
         run: |
-          bandit -r . -x unit_tests,integration_tests
+          bandit -r . -x ./unit_tests,./integration_tests
+
