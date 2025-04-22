@@ -13,8 +13,8 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Installer Pylint
-      run: pip install pylint
+    - name: Installer les dépendances
+      run: pip install -r requirements.txt
 
     - name: Linter Python
       run: pylint $(find . -name "*.py" ! -path "./.venv/*")
