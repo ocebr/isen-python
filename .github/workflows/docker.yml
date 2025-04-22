@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build, Push and Scan Docker Image
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - feature/cicd
 
 jobs:
-  docker: 
+  docker:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,9 +22,9 @@ jobs:
 
       - name: Push Docker image
         run: |
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/myapp:dev-${{ github.sha }} 
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/myapp:dev-${{ github.sha }}
 
-          security-scan:
+  security-scan:
     needs: docker
     permissions:
       contents: read
