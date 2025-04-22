@@ -1,0 +1,30 @@
+name: Hadolint Dockerfile Linting
+
+on:
+  push:
+    paths:
+      - '**/Dockerfile'
+  pull_request:
+    paths:
+      - '**/Dockerfile'
+
+jobs:
+  hadolint:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Récupérer le code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Étape 2 : Installer Hadolint
+      - name: Install Hadolint
+        run: |
+          wget -O hadolint https://github.com/hadolint/hadolint/releases/latest/download/hadolint-Linux-x86_64
+          chmod +x hadolint
+          sudo mv hadolint /usr/local/bin/
+
+      # Étape 3 : Lancer Hadolint sur les Dockerfile
+      - name: Run Hadolint
+        run: |
+          find . -name 'Dockerfile' -print0 | xargs -0 -n1 hadolint
