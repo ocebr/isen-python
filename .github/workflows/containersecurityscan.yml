@@ -2,8 +2,6 @@ name: Container Security Scan
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   build-and-scan:
