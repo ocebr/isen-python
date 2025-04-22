@@ -23,5 +23,5 @@ jobs:
       - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: sbom-syft-json # pas de point ... https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow#uploading-build-and-test-artifacts
+          name: sbom-syft-json
           path: isen-python-generate-sbom.syft-json
