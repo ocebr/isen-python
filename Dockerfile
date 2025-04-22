@@ -1,14 +1,21 @@
-FROM python:3.9-slim-buster
+# hadolint global ignore DL3008
+FROM debian:12-slim AS build
 
-# Par défaut l’image utilise déjà root — pas besoin de le redéfinir
-WORKDIR /app
+# hadolint ignore DL3008
+RUN apt-get update && \
+    apt-get install --no-install-suggests --no-install-recommends --yes python3-venv gcc libpython3-dev && \
+    python3 -m venv /venv && \
+    # clean apt cache to reduce image size
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Copies et installation des dépendances en une seule couche
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+FROM build AS build-venv
 
-# Copie du reste de l’application
-COPY . .
+COPY requirements.txt /requirements.txt
+RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
+
+FROM gcr.io/distroless/python3-debian12:latest-amd64
+COPY --from=build-venv /venv /venv
 
 # Création d’un groupe et d’un utilisateur système non‑root
 RUN addgroup --system appuser \
@@ -17,6 +24,10 @@ RUN addgroup --system appuser \
 # Passe à cet utilisateur pour l’exécution
 USER appuser
 
+WORKDIR /app
+
+COPY . .
+
 EXPOSE 8080
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]s
