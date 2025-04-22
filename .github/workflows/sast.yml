@@ -25,6 +25,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install bandit
 
-      - name: Run Bandit (excluding tests)
+      - name: Run Bandit (via config file)
         run: |
-          bandit -r . -x unit_tests,integration_tests
+          bandit -r . --configfile .bandit
