@@ -1,3 +1,26 @@
+# Virtual environment
 venv/*
-**/__pycache__
-.pytest_cache
+
+# Python bytecode files
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# pytest cache
+.pytest_cache/
+
+# IDE and editor specific files
+.idea/
+.vscode/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Distribution / packaging
+*.egg
+*.egg-info/
+dist/
+build/
+*.tar.gz
