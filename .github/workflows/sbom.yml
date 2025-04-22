@@ -2,27 +2,26 @@ name: Generate SBOM
 
 on:
   push:
-    branches: ["main", "develop", "feature/**"]
+    branches: [main, develop]
   workflow_dispatch:
 
 jobs:
-  generate-sbom:
-    name: Generate SBOM using Syft
+  sbom:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Generate SBOM from source
+      - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0.15.10
         with:
-          path: .
-          output-file: sbom.syft.json
+          source: dir:.
           format: syft-json
+          output-file: isen-python-generate-sbom.syft-json
 
       - name: Upload SBOM as artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: sbom
-          path: sbom.syft.json
+          name: sbom-syft-json # pas de point ... https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/storing-and-sharing-data-from-a-workflow#uploading-build-and-test-artifacts
+          path: isen-python-generate-sbom.syft-json
