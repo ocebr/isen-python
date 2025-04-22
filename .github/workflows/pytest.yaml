@@ -1,0 +1,13 @@
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run unit tests
+        run: |
+          pytest --disable-warnings --maxfail=1
