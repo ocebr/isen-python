@@ -19,11 +19,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install bandit
-        with: 
-          path: "."
-          level: high
-          confidence: high
-          exit_zero: true
       - name: Run Bandit security scan
         run: |
           bandit -r . -x tests,unit_test,integration_tests -c bandit.yaml
