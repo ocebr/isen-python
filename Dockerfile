@@ -1,8 +1,6 @@
-FROM python:3.9-slim-buster
+FROM python:3.9.18-slim-buster
 
-USER root
-
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libffi-dev \
     libssl-dev \
@@ -15,8 +13,8 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
