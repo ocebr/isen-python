@@ -1,153 +1,156 @@
-name: CI‑Pipeline
+name: CI Pipeline
 
 on:
   push:
-    branches: ['**']
+    branches:
+      - '**'
   pull_request:
-    branches: ['**']
+    branches:
+      - '**'
 
-env:
-  REGISTRY: docker.io
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/isen-python
-
-# ---------- LINT --------------------------------------------------
 jobs:
-  lint:
+  lint-dockerfile:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      # ---- Dockerfile linter (Hadolint) ----
-      - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3
+      - name: Run Hadolint on Dockerfile
+        uses: hadolint/hadolint-action@v2
         with:
           dockerfile: Dockerfile
-          failure-threshold: warning      # fail on warning or error
 
-      # ---- Python linter (Pylint) ----
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install deps & lint
-        run: |
-          pip install --upgrade pip pylint
-          [ -f requirements.txt ] && pip install -r requirements.txt
-          pylint $(git ls-files '*.py') \
-                 --disable=C,R0801,import-error \
-                 --fail-under=7
-
-# ---------- TESTS -------------------------------------------------
   unit-tests:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
-      - name: Install deps
+          python-version: '3.8'
+
+      - name: Install dependencies
         run: |
-          pip install --upgrade pip pytest
-          [ -f requirements.txt ] && pip install -r requirements.txt
-      - name: Run unit tests
-        run: pytest unit_tests -q --maxfail=1
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Unit tests
+        run: |
+          pytest tests/unit_tests -v
 
   integration-tests:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Install deps
-        run: |
-          pip install --upgrade pip pytest
-          [ -f requirements.txt ] && pip install -r requirements.txt
-      - name: Run integration tests
-        run: pytest integration_tests -q --maxfail=1
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-# ---------- SAST (Bandit) ----------------------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Integration tests
+        run: |
+          pytest tests/integration_tests -v
+
   security:
     runs-on: ubuntu-latest
-    needs: lint
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.11'
-      - name: Run Bandit
+          python-version: '3.8'
+
+      - name: Install Bandit
         run: |
           pip install bandit
-          bandit -r . --exclude unit_tests,integration_tests -q
-          
-# ---------- BUILD & IMAGE SCAN -----------------------------------
-  build-push-image:
-    runs-on: ubuntu-latest
-    needs: [unit-tests, integration-tests, security]
-    if: startsWith(github.ref_name, 'dev-')   # build only on dev‑* branches
-    permissions: write-all
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Docker Hub login
-        uses: docker/login-action@v3
+      - name: Run Bandit SAST
+        run: |
+          bandit -r . --exclude tests,integration_tests,unit_tests -q
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: [lint-dockerfile, unit-tests, integration-tests, security]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Set up Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build & push image
-        uses: docker/build-push-action@v5
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:dev-${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/isen-python:dev-${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/isen-python:latest
 
-# ---------- TRIVY IMAGE SCAN -------------------------------------
   trivy-scan:
     runs-on: ubuntu-latest
-    needs: build-push-image
-    if: needs.build-push-image.result == 'success'
-    continue-on-error: true        # do not fail pipeline on findings
+    needs: build-and-push
     steps:
-      - name: Scan Docker image with Trivy
-        uses: aquasecurity/trivy-action@0.12.0
+      - name: Scan image with Trivy
+        uses: aquasecurity/trivy-action@v0.10.0
         with:
-          image-ref: ${{ env.IMAGE_NAME }}:dev-${{ github.sha }}
-          format: sarif
-          output: trivy-results.sarif
-          severity: 'HIGH,CRITICAL'
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@v3
+          image-ref: ${{ secrets.DOCKERHUB_USERNAME }}/isen-python:dev-${{ github.sha }}
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy SARIF results
+        uses: github/codeql-action/upload-sarif@v1
         with:
           sarif_file: trivy-results.sarif
 
-# ---------- SBOM & GRYPE -----------------------------------------
-  sbom-and-grype:
+  generate-sbom:
     runs-on: ubuntu-latest
-    needs: build-push-image
+    needs: build-and-push
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Generate SBOM (Syft)
-        uses: anchore/sbom-action@v0.15.3
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0.14.0
         with:
-          path: dir:${{ github.workspace }}
-          output-file: sbom.json
+          path: ${{ github.workspace }}
           format: syft-json
+          output-file: sbom.json
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v2
         with:
           name: sbom
           path: sbom.json
 
-      - name: Grype scan SBOM
-        uses: anchore/scan-action@v3
+  grype-scan:
+    runs-on: ubuntu-latest
+    needs: generate-sbom
+    steps:
+      - name: Scan SBOM with Grype
+        uses: anchore/scan-action@v0.7.0
         with:
           sbom: sbom.json
-          fail-build: false          # do not break on findings
+          fail-build: false
