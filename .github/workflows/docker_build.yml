@@ -8,6 +8,8 @@ jobs:
   docker-build:
     name: Build Docker image and push to Docker Hub
     runs-on: ubuntu-latest
+    outputs:
+      image_sha: ${{ steps.meta.outputs.image_sha }}
 
     steps:
       - name: Checkout code
@@ -25,3 +27,7 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/isen-python:dev-${{ github.sha }}
+
+      - name: Output image SHA
+        id: meta
+        run: echo "image_sha=${GITHUB_SHA}" >> $GITHUB_OUTPUT
