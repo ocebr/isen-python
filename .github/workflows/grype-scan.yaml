@@ -21,7 +21,7 @@ jobs:
       - name: Enregistrer la SBOM comme artefact
         uses: actions/upload-artifact@v4
         with:
-          name: sbom
+          name: sbom_syft
           path: sbom-syft.json
 
       - name: Installer Grype
