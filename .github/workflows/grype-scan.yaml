@@ -3,8 +3,8 @@ name: SBOM avec Syft et Grype
 on: [push]
 
 jobs:
-  sbom-scan:
-    name: SBOM Scan
+  sbomscan:
+    name: sbomscan
     runs-on: ubuntu-latest
 
     steps:
@@ -35,5 +35,5 @@ jobs:
       - name: Enregistrer le rapport Grype comme artefact
         uses: actions/upload-artifact@v4
         with:
-          name: rapport_grype
+          name: grype-report
           path: rapport-grype.json
