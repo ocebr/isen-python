@@ -1,0 +1,29 @@
+name: Lint Python Code
+
+on:
+  push:
+    branches: [main, feature/cicd-pipeline]
+  pull_request:
+
+  jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Installer depandeance
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pylint
+
+      - name: Run Pylint
+        run: |
+          pylint $(git ls-files '*.py')
