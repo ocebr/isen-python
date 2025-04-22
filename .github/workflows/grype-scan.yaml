@@ -3,8 +3,8 @@ name: SBOM avec Syft et Grype
 on: [push]
 
 jobs:
-  sbomscan:
-    name: sbomscan
+  sbom:
+    name: sbom
     runs-on: ubuntu-latest
 
     steps:
