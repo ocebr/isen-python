@@ -1,9 +1,6 @@
 name: Construire et Pusher l'image Docker
 
-on:
-  push:
-    branches:
-      - dev
+on: [push]
 
 jobs:
   build-and-push:
