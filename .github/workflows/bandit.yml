@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10"]
+        python-version: [ "3.8", "3.9", "3.10" ]
     steps:
       - uses: actions/checkout@v4
 
@@ -24,5 +24,5 @@ jobs:
 
       - name: Run Bandit SAST scan
         run: |
-          # Recursively scan all .py files, excluding unit_tests/ and integration_tests/
-          bandit -r . --exclude unit_tests, integration_tests --fail-on high
+          # scan everything except tests, only show high‑severity (and fail on any hit)
+          bandit -r . --exclude unit_tests,integration_tests -l high
