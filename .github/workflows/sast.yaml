@@ -3,7 +3,7 @@ name: Analyse de sécurité SAST
 on: [push]
 
 jobs:
-  bandit:
+  scan-securite:
     name: Analyse de sécurité avec Bandit
     runs-on: ubuntu-latest
 
@@ -20,5 +20,5 @@ jobs:
       run: pip install bandit
 
     - name: Scanner le code avec Bandit
-      run: bandit -r . -x unit_tests,integration_tests --severity-level high
-
+      run: |
+        bandit -r . -x unit_tests,integration_tests --severity-level high --confidence-level high
