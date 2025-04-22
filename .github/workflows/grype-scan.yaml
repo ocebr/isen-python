@@ -1,21 +1,22 @@
-name: Scanner la SBOM avec Grype
+name: Générer et scanner la SBOM avec Grype
 
 on: [push]
 
 jobs:
-  scan-sbom:
-    name: Analyse de la SBOM avec Grype
+  generate-and-scan-sbom:
+    name: Génération et analyse de la SBOM
     runs-on: ubuntu-latest
 
     steps:
       - name: Récupérer le dépôt
         uses: actions/checkout@v4
 
-      - name: Télécharger la SBOM générée
-        uses: actions/download-artifact@v4
+      - name: Générer la SBOM avec Syft
+        uses: anchore/sbom-action@v0.15.4
         with:
-          name: sbom_syft
           path: .
+          format: syft-json
+          output-file: sbom-syft.json
 
       - name: Installer Grype
         run: |
