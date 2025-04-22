@@ -17,13 +17,6 @@ RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 FROM gcr.io/distroless/python3-debian12:latest-amd64
 COPY --from=build-venv /venv /venv
 
-# Création d’un groupe et d’un utilisateur système non‑root
-RUN addgroup --system appuser \
- && adduser  --system --ingroup appuser appuser
-
-# Passe à cet utilisateur pour l’exécution
-USER appuser
-
 WORKDIR /app
 
 COPY . .
