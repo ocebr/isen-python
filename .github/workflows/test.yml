@@ -24,6 +24,9 @@ jobs:
           pip install -r requirements.txt
           pip install pytest
 
+      - name: Inject SECRET_KEY
+        run: echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
+
       - name: Run Unit Tests
         run: pytest unit_tests
 
@@ -44,6 +47,9 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest
+
+      - name: Inject SECRET_KEY
+        run: echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> $GITHUB_ENV
 
       - name: Run Integration Tests
         run: pytest integration_tests
