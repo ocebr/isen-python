@@ -6,7 +6,8 @@ on:
       - feature/cicd
 
 jobs:
-  docker:
+  docker: 
+  
     runs-on: ubuntu-latest
 
     steps:
