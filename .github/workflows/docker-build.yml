@@ -3,7 +3,11 @@ name: Build and Push Docker image
 on:
   push:
     branches:
-      - feature/cicd-pipeline
+      - main
+      - feature/**
+  pull_request:
+    branches:
+      - main
 
 jobs:
   docker:
