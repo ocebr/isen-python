@@ -1,13 +1,7 @@
 name: Hadolint Dockerfile Linting
 
-on:
-  push:
-    paths:
-      - '**/Dockerfile'
-  pull_request:
-    paths:
-      - '**/Dockerfile'
-
+on: [push]
+  
 jobs:
   hadolint:
     runs-on: ubuntu-latest
