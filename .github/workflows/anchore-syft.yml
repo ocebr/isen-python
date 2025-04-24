@@ -11,6 +11,7 @@
 # and parameters, see https://github.com/anchore/sbom-action. For more
 # information about the Anchore SBOM tool, Syft, see
 # https://github.com/anchore/syft
+
 name: Anchore Syft SBOM scan
 
 on:
@@ -41,7 +42,7 @@ jobs:
           upload-artifact: false
 
       - name: Upload SBOM Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: sbom-report.json
+          name: sbom-report
           path: sbom.json
