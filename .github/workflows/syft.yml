@@ -1,6 +1,9 @@
-name: Build, Push and Scan Docker Image with Syft
+name: Build, Push and Scan Docker Image with Syft and Grype
 
-on: [push]
+on:
+  push:
+    branches:
+      - dev
 
 jobs:
   build_and_scan:
@@ -10,7 +13,6 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v2
 
-
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -19,21 +21,50 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myusername/myapp:dev-${{ github.sha }} .
+          docker build -t larryjason/isen-python:dev-${{ github.sha }} .
 
 
       - name: Push Docker image to Docker Hub
         run: |
           docker push larryjason/isen-python:dev-${{ github.sha }}
 
-
       - name: Install Syft
         run: |
           wget https://github.com/anchore/syft/releases/download/v0.60.0/syft_0.60.0_linux_amd64.deb
           sudo dpkg -i syft_0.60.0_linux_amd64.deb
 
-
-      - name: Run Syft scan
+      - name: Run Syft to generate SBOM
         run: |
-          syft larryjason/isen-python:dev-${{ github.sha }} -o json > syft-report.json
-          cat syft-report.json
+          syft larryjason/isen-python:dev-${{ github.sha }} -o json > sbom.json
+          cat sbom.json
+
+  grype_scan:
+    runs-on: ubuntu-latest
+    needs: build_and_scan  
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      
+      - name: Install Grype
+        run: |
+          wget https://github.com/anchore/grype/releases/download/v0.58.1/grype_0.58.1_linux_amd64.deb
+          sudo dpkg -i grype_0.58.1_linux_amd64.deb
+
+     
+      - name: Install jq (for JSON parsing)
+        run: sudo apt-get install jq
+
+      
+      - name: Run Grype to scan SBOM
+        run: |
+          grype sbom:sbom.json --output json > grype-report.json
+          cat grype-report.json
+
+      
+      - name: Upload Grype report as an artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: grype-report
+          path: grype-report.json
