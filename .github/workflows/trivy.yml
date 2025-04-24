@@ -1,8 +1,6 @@
 name: Build and Scan Container
 
-on:
-  push:
-    branches: [ dev ]
+on: [push]
 
 jobs:
   build_and_scan:
