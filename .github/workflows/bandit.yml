@@ -1,0 +1,27 @@
+name: Bandit SAST
+
+on: [push]
+
+jobs:
+  bandit:
+    name: Analyse de sécurité avec Bandit
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+
+      - name: Installer Bandit
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install bandit
+
+
+      - name: Analyse de sécurité
+        run: |
+          bandit -r . \
+            --exclude ./unit_tests,./integration_tests \
+            --format txt \
+            --severity-level medium
