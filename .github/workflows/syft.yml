@@ -1,0 +1,39 @@
+name: Build, Push and Scan Docker Image with Syft
+
+on: [push]
+
+jobs:
+  build_and_scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t myusername/myapp:dev-${{ github.sha }} .
+
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push larryjason/isen-python:dev-${{ github.sha }}
+
+
+      - name: Install Syft
+        run: |
+          wget https://github.com/anchore/syft/releases/download/v0.60.0/syft_0.60.0_linux_amd64.deb
+          sudo dpkg -i syft_0.60.0_linux_amd64.deb
+
+
+      - name: Run Syft scan
+        run: |
+          syft larryjason/isen-python:dev-${{ github.sha }} -o json > syft-report.json
+          cat syft-report.json

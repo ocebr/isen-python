@@ -18,11 +18,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t myusername/myapp:dev-${{ github.sha }} .
+          docker build -t larryjason/isen-python:dev-${{ github.sha }} .
 
       - name: Push Docker image to Docker Hub
         run: |
-          docker push myusername/myapp:dev-${{ github.sha }}
+          docker push larryjason/isen-python:dev-${{ github.sha }}
 
       - name: Install Trivy
         run: |
