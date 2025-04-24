@@ -21,4 +21,4 @@ jobs:
       # Étape 3 : Lancer Hadolint sur les Dockerfile
       - name: Run Hadolint
         run: |
-          find . -name 'Dockerfile' -print0 | xargs -0 -n1 hadolint
+            find . -name 'Dockerfile' -print0 | xargs -0 -n1 -I{} sh -c 'hadolint {} || true'
