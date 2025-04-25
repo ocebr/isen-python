@@ -10,7 +10,7 @@ jobs:
   trivy-scan:
     name: Run Trivy vulnerability scanner
     runs-on: ubuntu-latest
-    continue-on-error: true  # ❗ pour ne pas faire échouer le pipeline
+
     steps:
       - name: Install Trivy
         run: |
@@ -19,6 +19,7 @@ jobs:
           sudo dpkg -i trivy_0.49.1_Linux-64bit.deb
 
       - name: Trivy Scan Docker Image
+        continue-on-error: true  # ✅ déplacé ici
         env:
           TRIVY_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
