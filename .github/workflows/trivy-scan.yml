@@ -28,4 +28,5 @@ jobs:
           TRIVY_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
           echo "$TRIVY_PASSWORD" | docker login -u "$TRIVY_USERNAME" --password-stdin
-          trivy image --severity HIGH,CRITICAL ngnepiepaye/isen-python:dev-${{ github.sha }}
+          trivy image --severity HIGH,CRITICAL ngnepiepaye/isen-python:dev-d4fe53aa74a164bb37bd083266c34c666893bdc0
+
