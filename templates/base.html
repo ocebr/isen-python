@@ -78,6 +78,10 @@ Clark, MO 65243</p>
         <!-- Core theme JS-->
         <script src="{% static 'js/scripts.js' %}"></script>
         <script>
+          card = [];
+          function addToCard() {
+            return "added to card";
+          }
             function markFavourite(id, reload) {
               $.ajax({
                 url: "/favourite/mark/" + id + "/",
