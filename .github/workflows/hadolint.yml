@@ -1,16 +1,19 @@
 name: Hadolint
 
-on: [push]
+on:
+  push:
 
 jobs:
   lint-docker:
     name: Lint Dockerfile
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Lint Dockerfile with Hadolint (v3)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint Dockerfile with Hadolint
         uses: hadolint/hadolint-action@v3.1.0
         with:
-          dockerfile: Dockerfile
-          args: --ignore DL3008
+          dockerfile: ./Dockerfile      # path to your Dockerfile
+          ignore: DL3008                # rule(s) to ignore

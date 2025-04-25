@@ -6,7 +6,7 @@ jobs:
   build-and-push:
     name: Build & Push Docker image
     runs-on: ubuntu-latest
-    # Ne se lance que sur la branche dev
+    # Only runs on the dev branch
     if: github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
