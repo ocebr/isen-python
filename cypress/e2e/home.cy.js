@@ -1,6 +1,6 @@
 describe('Create and connect to an account', () => {
   it('Visits the Oc commerce site', () => {
-    cy.visit('/home')
+    cy.visit('home')
 
     // User is able to create an account an to be redirect to login pages
 
