@@ -1,0 +1,28 @@
+name: Construire et Pousser l'image Docker
+
+on: [push]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Récupérer le code
+      uses: actions/checkout@v4
+
+    - name: Configurer Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Authentification à Google Cloud
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: '${{ secrets.KEY_CLOUD }}'
+
+    - name: Configurer Docker pour utiliser Google Cloud Artifact Registry
+      run: |
+        gcloud auth configure-docker europe-west1-docker.pkg.dev
+
+    - name: Construire et pousser l'image Docker
+      run: |
+        docker build -t europe-west1-docker.pkg.dev/wise-polygon-458207-d7/cicd-charlotte/cicd-charlotte:latest .
+        docker push europe-west1-docker.pkg.dev/wise-polygon-458207-d7/cicd-charlotte/cicd-charlotte:latest
