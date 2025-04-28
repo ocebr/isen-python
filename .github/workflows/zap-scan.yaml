@@ -10,18 +10,10 @@ jobs:
       - name: Récupérer le dépôt
         uses: actions/checkout@v4
 
-      - name: Construire et lancer l'application avec Docker
-        run: |
-          docker build -t cicd-charlotte .
-          docker run -d -p 8080:8080 cicd-charlotte
-
-      - name: Attendre que l'application soit prête
-        run: sleep 20
-
       - name: Lancer un scan ZAP Baseline
         uses: zaproxy/action-baseline@v0.10.0
         with:
-          target: 'http://localhost:8080'
+          target: 'https://cicd-charlotte-deployment-321568021753.europe-west1.run.app'
           fail_action: false
           cmd_options: '-t 60'
           format: 'json'
