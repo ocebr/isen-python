@@ -16,11 +16,4 @@ jobs:
           target: 'https://cicd-charlotte-deployment-321568021753.europe-west1.run.app'
           fail_action: false
           cmd_options: '-t 60'
-          format: 'json'
-          output_file: 'zap_report.json'
-
-      - name: Télécharger le rapport ZAP en tant qu'artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: zap-report
-          path: zap_report.json
+          artifact_name: 'zap-report'
