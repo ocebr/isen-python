@@ -15,5 +15,4 @@ jobs:
         with:
           target: 'https://cicd-charlotte-deployment-321568021753.europe-west1.run.app'
           fail_action: false
-          cmd_options: '-t 60'
           artifact_name: 'zap-report'
