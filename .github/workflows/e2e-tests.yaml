@@ -23,14 +23,14 @@ jobs:
       - name: Run Django server in background
         run: |
           python manage.py migrate
-          nohup python manage.py runserver 0.0.0.0:8000 &
+          nohup python manage.py runserver 0.0.0.0:8080 &
         env:
           DATABASE_URL: postgres://user:password@localhost:5432/django
 
       - name: Wait for server to be ready
         run: |
           sleep 10
-          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8000
+          curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:8080
 
       - name: Install Cypress
         run: npm install cypress --save-dev
