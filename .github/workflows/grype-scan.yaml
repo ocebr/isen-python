@@ -17,6 +17,7 @@ jobs:
           path: .
           format: syft-json
           output-file: sbom-syft.json
+          upload-artifact: false
 
       - name: Enregistrer la SBOM comme artefact
         uses: actions/upload-artifact@v4
