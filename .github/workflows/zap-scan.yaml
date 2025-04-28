@@ -1,0 +1,35 @@
+name: Scan ZAP Baseline DAST
+
+on: [push]
+
+jobs:
+  zap-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Récupérer le code du dépôt
+        uses: actions/checkout@v4
+
+      - name: Construire et lancer l'application en local
+        run: |
+          docker build -t cicd-charlotte .
+          docker run -d -p 8080:8080 cicd-charlotte
+
+      - name: Attendre que l'application soit prête
+        run: sleep 20
+
+      - name: Lancer un scan ZAP Baseline
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          target: 'http://localhost:8080'
+          time: '1'
+          fail_action: false
+          format: 'json'
+          output_file: 'zap_report.json'
+          min_priority: 'PASS'
+
+      - name: Upload du rapport ZAP en tant qu'artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapport-zap
+          path: zap_report.json
