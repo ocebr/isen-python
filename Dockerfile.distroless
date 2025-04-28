@@ -14,7 +14,7 @@ WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY --from=builder /app /app
 
-EXPOSE 8000
+EXPOSE 8080
 
-CMD ["manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["manage.py", "runserver", "0.0.0.0:8080"]
 
