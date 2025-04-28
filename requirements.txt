@@ -22,3 +22,4 @@ toml==0.10.2
 locust==1.6.0
 selenium==3.141.0
 pylint==3.3.6
+gunicorn
