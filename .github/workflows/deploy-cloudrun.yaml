@@ -1,0 +1,24 @@
+name: Déployer sur Cloud Run
+
+on: [push]
+
+jobs:
+  deploy:
+    name: Déploiement Cloud Run
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Authentification Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.KEY_CLOUD }}'
+
+      - name: Déploiement sur Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          service: cicd-charlotte-deployment
+          image: europe-west1-docker.pkg.dev/wise-polygon-458207-d7/cicd-charlotte/cicd-charlotte:latest
+          region: europe-west1
