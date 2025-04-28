@@ -12,8 +12,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Lancer un scan ZAP Baseline
-        uses: zaproxy/action-baseline@v0.10.0
+        uses: zaproxy/action-baseline@v0.14.0
         with:
           target: 'https://cicd-charlotte-deployment-321568021753.europe-west1.run.app'
           fail_action: false
-          artifact_name: 'zap-report'
