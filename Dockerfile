@@ -16,4 +16,4 @@ EXPOSE 8080
 
 USER app_user
 
-CMD ["gunicorn", "Project.wsgi:application", "--bind", "0.0.0.0:$PORT"]
+CMD exec gunicorn Project.wsgi:application --bind 0.0.0.0:${PORT:-8080}
