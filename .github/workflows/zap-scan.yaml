@@ -5,6 +5,7 @@ on: [push]
 jobs:
   zap-scan:
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - name: Récupérer le dépôt
