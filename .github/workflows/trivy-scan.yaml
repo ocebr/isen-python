@@ -32,9 +32,8 @@ jobs:
     - name: Installer Trivy
       run: |
         sudo apt-get update
-        sudo apt-get install -y wget
-        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.49.1_Linux-64bit.deb
-        sudo dpkg -i trivy_0.49.1_Linux-64bit.deb
+        sudo apt-get install -y wget curl
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin
 
     - name: Connexion à Docker Hub
       run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
