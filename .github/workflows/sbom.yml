@@ -1,0 +1,27 @@
+name: SBOM analysis
+
+on: 
+  push:
+  pull_request:
+
+jobs:
+    sbom:
+        name: sbom
+        runs-on: ubuntu-24.04
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        - uses: anchore/sbom-action@v0
+          id: scan
+          with:
+            path: ${{ github.workspace }}
+            format: spdx-json
+            output-file: "${{ github.event.repository.name }}-sbom.spdx.json"
+        - name: Scan SBOM
+          uses: anchore/scan-action@v6
+          with:
+            sbom: "${{ github.event.repository.name }}-sbom.spdx.json"
+        - name: upload Anchore scan SARIF report
+          uses: github/codeql-action/upload-sarif@v3
+          with:
+            sarif_file: ${{ steps.scan.outputs.sarif }}
