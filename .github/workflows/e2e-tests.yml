@@ -1,0 +1,23 @@
+name: End-to-End Tests Cypress
+
+on:
+    push:
+      branches:
+        - main
+
+    
+jobs:
+  cypress:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install root dependencies
+        run: pip install -r requirements.txt
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        run: |
+          python3 manage.py runserver 0.0.0.0:8080 &
+          npm install cypress 
+          npx cypress run

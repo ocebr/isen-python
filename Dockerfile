@@ -25,4 +25,6 @@ COPY . .
 
 EXPOSE 8080
 
-ENTRYPOINT ["/venv/bin/python3","manage.py", "runserver", "0.0.0.0:8080"]
+ENTRYPOINT ["/venv/bin/python"]
+CMD [ "manage.py", "runserver", "0.0.0.0:8080"] 
+
